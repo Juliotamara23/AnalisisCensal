@@ -27,7 +27,6 @@ El proyecto se organiza en los siguientes archivos:
 * `reportes_pdf.py`: Contiene la clase y la lógica para generar los reportes en formato PDF.
 * `reportes_txt.py`: Contiene las funciones para generar los reportes en formato TXT.
 * `reportes_json.py`: Contiene las funciones para generar los reportes en formato JSON.
-* `README.md`: Este archivo, que proporciona información general sobre el proyecto.
 
 ## Requisitos
 
