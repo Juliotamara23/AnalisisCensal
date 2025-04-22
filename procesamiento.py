@@ -25,18 +25,15 @@ def procesar_datos(ruta_archivo):
     except Exception as e:
         return f"Error al leer el archivo '{ruta_archivo}': {e}", {}, {}, 0, pd.DataFrame()
 
-    # Omitir personas con documento '99'
-    df_filtrado = df[df['Documento'].astype(str) != '99'].copy()
-
     familias_multiples = {}
     familias_uno = {}
     advertencias = []
-    total_personas = len(df_filtrado)
-    jefes_de_familia_documentos = set(df_filtrado[df_filtrado['Cedula de jefe(a) de Familia'].astype(str) == df_filtrado['Documento'].astype(str)]['Documento'].astype(str).tolist())
+    total_personas = len(df)
+    jefes_de_familia_documentos = set(df[df['Cedula de jefe(a) de Familia'].astype(str) == df['Documento'].astype(str)]['Documento'].astype(str).tolist())
 
-    for jefe_cedula_num in df_filtrado['Cedula de jefe(a) de Familia'].unique():
+    for jefe_cedula_num in df['Cedula de jefe(a) de Familia'].unique():
         jefe_cedula = str(jefe_cedula_num)
-        familia = df_filtrado[df_filtrado['Cedula de jefe(a) de Familia'].astype(str) == jefe_cedula].copy()
+        familia = df[df['Cedula de jefe(a) de Familia'].astype(str) == jefe_cedula].copy()
 
         if not familia.empty:
             familia['Cedula de jefe(a) de Familia'] = familia['Cedula de jefe(a) de Familia'].astype(str)
@@ -66,7 +63,7 @@ def procesar_datos(ruta_archivo):
                     advertencias.append([jefe_cedula, nombres_multiples_jefes, "Múltiples jefes de familia identificados con la misma cédula."])
 
     # Validar personas sin jefe de familia referenciado correctamente
-    for index, row in df_filtrado.iterrows():
+    for index, row in df.iterrows():
         cedula_jefe = str(row['Cedula de jefe(a) de Familia'])
         documento_persona = str(row['Documento'])
         nombre_completo_persona = f"{str(row['Primer Nombre']).strip()} {str(row['Segundo Nombre']).strip() if pd.notna(row['Segundo Nombre']) else ''} {str(row['Primer Apellido']).strip()} {str(row['Segundo Apellido']).strip() if pd.notna(row['Segundo Apellido']) else ''}".strip()
@@ -84,9 +81,9 @@ def procesar_datos(ruta_archivo):
             seen_warnings.add(warning_tuple)
 
     # Detectar personas repetidas (basado ÚNICAMENTE en 'Documento')
-    conteo_documentos = df_filtrado.groupby('Documento').size().reset_index(name='Cantidad')
+    conteo_documentos = df.groupby('Documento').size().reset_index(name='Cantidad')
     documentos_repetidos = conteo_documentos[conteo_documentos['Cantidad'] > 1]['Documento'].tolist()
-    personas_repetidas_df = df_filtrado[df_filtrado['Documento'].isin(documentos_repetidos)].copy()
+    personas_repetidas_df = df[df['Documento'].isin(documentos_repetidos)].copy()
 
     if not personas_repetidas_df.empty:
         personas_repetidas_df['Nombre Completo Persona'] = personas_repetidas_df['Primer Nombre'].astype(str).str.strip() + ' ' + \
