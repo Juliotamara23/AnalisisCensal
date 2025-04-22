@@ -1,5 +1,5 @@
 from tabulate import tabulate
-from procesamiento import procesar_datos
+from ..procesamiento import procesar_datos
 
 def generar_reporte_familias_txt(familias, nombre_archivo, total_personas):
     num_familias = len(familias)
@@ -17,7 +17,7 @@ def generar_reporte_un_miembro_txt(familias, nombre_archivo, total_personas):
     num_jefes_solos = len(familias)
     with open(nombre_archivo, 'w', encoding='utf-8') as archivo:
         archivo.write("=" * 20 + " JEFES DE FAMILIA REGISTRADOS SIN OTROS MIEMBROS " + "=" * 20 + "\n\n")
-        archivo.write("Esta tabla muestra a los jefes de familia que se registraron como el único miembro de su núcleo familiar. Esto podría indicar que faltan miembros por registrar o que realmente son familias unipersonales.\n\n")
+        archivo.write("Esta tabla muestra a los jefes de familia que se registraron como el único miembro de su núcleo familiar.\nEsto podría indicar que faltan miembros por registrar o que realmente son familias unipersonales.\n\n")
         tabla_jefes_solos = [["Cédula del Jefe", "Nombre del Jefe"]]
         for jefe_cedula, data in familias.items():
             jefe_doc, jefe_nombre = data['jefe']

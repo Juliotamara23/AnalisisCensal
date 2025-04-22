@@ -1,45 +1,45 @@
 from fpdf import FPDF
-from procesamiento import procesar_datos
+from ..procesamiento import procesar_datos
 import os
 import pandas as pd
 
 class PDFReport:
     def __init__(self, title: str):
         """
-        Initialize the PDF report with a title.
-        :param title: Title for the PDF document.
+        Inicializa el reporte PDF con un título.
+        :param title: Título para el documento PDF.
         """
         self.title = title
-        self.pdf = FPDF(orientation='P', unit='mm', format='A3') # Vertical orientation
-        # Add Unicode font
+        self.pdf = FPDF(orientation='P', unit='mm', format='A3')
+        # Unicode font
         self.pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf')
         self.pdf.add_font('DejaVu', 'B', 'fonts/DejaVuSans-Bold.ttf')
-        self.pdf.set_font('DejaVu', size=10) # Default font size
+        self.pdf.set_font('DejaVu', size=10)
 
     def add_title(self):
-        """Adds the title to the PDF."""
+        """Agrega el título al PDF."""
         self.pdf.add_page()
         self.pdf.set_font("DejaVu", style="B", size=16)
         self.pdf.cell(0, 10, self.title, new_x="LMARGIN", new_y="NEXT", align="C")
         self.pdf.ln(10)
 
     def sub_title(self):
-        """Adds a subtitle title to the PDF."""
+        """Agrega un subtítulo al PDF."""
         self.pdf.add_page()
         self.pdf.set_font("DejaVu", style="B", size=14)
         self.pdf.cell(0, 10, self.title, new_x="LMARGIN", new_y="NEXT", align="C")
         self.pdf.ln(10)
 
     def add_description(self, text: str):
-        """Adds a description text to the PDF."""
+        """Agrega un texto descriptivo al PDF."""
         self.pdf.set_font("DejaVu", size=12)
-        self.pdf.multi_cell(0, 5, text, new_x="LMARGIN", new_y="NEXT") # Updated ln
+        self.pdf.multi_cell(0, 5, text, new_x="LMARGIN", new_y="NEXT")
         self.pdf.ln(5)
 
     def create_table_from_dataframe(self, df: pd.DataFrame):
-        """Creates a table in the PDF from a Pandas DataFrame, centered."""
+        """Crea una tabla en el PDF a partir de un DataFrame de Pandas, centrada."""
         if df.empty:
-            self.pdf.cell(0, 10, "No hay datos para mostrar en esta tabla.", new_x="LMARGIN", new_y="NEXT") # Updated ln
+            self.pdf.cell(0, 10, "No hay datos para mostrar en esta tabla.", new_x="LMARGIN", new_y="NEXT")
             return
 
         df_str = df.astype(str)
@@ -49,12 +49,12 @@ class PDFReport:
 
         with self.pdf.table(
             borders_layout="MINIMAL",
-            cell_fill_color=200,  # grey
+            cell_fill_color=200,  # gris
             cell_fill_mode="ROWS",
             line_height=self.pdf.font_size * 2,
             text_align="CENTER",
-            width=self.pdf.epw - 20, # Use the effective page width minus some margin
-            align='C' # Center the table
+            width=self.pdf.epw - 20, # Usa el ancho efectivo de la página menos un margen
+            align='C' # Centra la tabla
         ) as table:
             for data_row in DATA:
                 row = table.row()
@@ -63,7 +63,7 @@ class PDFReport:
         self.pdf.ln(5)
 
     def save_pdf(self, filename: str):
-        """Generates the PDF and saves it to a file."""
+        """Genera el PDF y lo guarda en un archivo."""
         self.pdf.output(filename)
 
 if __name__ == "__main__":

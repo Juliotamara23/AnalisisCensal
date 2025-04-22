@@ -1,5 +1,5 @@
 import json
-from procesamiento import procesar_datos
+from ..procesamiento import procesar_datos
 import os
 
 def generar_reporte_familias_json(familias, nombre_archivo, total_personas):
