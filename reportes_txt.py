@@ -7,9 +7,6 @@ def generar_reporte_familias_txt(familias, nombre_archivo, total_personas):
     with open(nombre_archivo, 'w', encoding='utf-8') as archivo:
         for jefe_cedula, data in familias.items():
             archivo.write(f"\n{'=' * 30} Familia con Cédula de Jefe(a) de Familia: {jefe_cedula} {'=' * 30}\n")
-            archivo.write("\nJefe(a) de Familia:\n")
-            jefe_tabla = [['Documento', 'Nombre Completo'], data['jefe']]
-            archivo.write(tabulate(jefe_tabla, headers='firstrow', tablefmt='grid') + "\n")
             archivo.write("\nMiembros de la Familia:\n")
             archivo.write(tabulate(data['miembros'], headers='keys', tablefmt='grid', showindex=False) + "\n")
             total_miembros += len(data['miembros']) + 1 # +1 para el jefe

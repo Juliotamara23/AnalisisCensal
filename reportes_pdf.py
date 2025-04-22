@@ -12,8 +12,8 @@ class PDFReport:
         self.title = title
         self.pdf = FPDF(orientation='P', unit='mm', format='A3') # Vertical orientation
         # Add Unicode font
-        self.pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf', uni=True)
-        self.pdf.add_font('DejaVu', 'B', 'fonts/DejaVuSans-Bold.ttf', uni=True)
+        self.pdf.add_font('DejaVu', '', 'fonts/DejaVuSans.ttf')
+        self.pdf.add_font('DejaVu', 'B', 'fonts/DejaVuSans-Bold.ttf')
         self.pdf.set_font('DejaVu', size=10) # Default font size
 
     def add_title(self):
@@ -33,13 +33,13 @@ class PDFReport:
     def add_description(self, text: str):
         """Adds a description text to the PDF."""
         self.pdf.set_font("DejaVu", size=12)
-        self.pdf.multi_cell(0, 5, text) # Smaller line height for description
+        self.pdf.multi_cell(0, 5, text, new_x="LMARGIN", new_y="NEXT") # Updated ln
         self.pdf.ln(5)
 
     def create_table_from_dataframe(self, df: pd.DataFrame):
         """Creates a table in the PDF from a Pandas DataFrame, centered."""
         if df.empty:
-            self.pdf.cell(0, 10, "No hay datos para mostrar en esta tabla.", ln=True)
+            self.pdf.cell(0, 10, "No hay datos para mostrar en esta tabla.", new_x="LMARGIN", new_y="NEXT") # Updated ln
             return
 
         df_str = df.astype(str)
@@ -88,15 +88,17 @@ if __name__ == "__main__":
         reporte_familias.add_description(f"Este reporte detalla las familias con más de un miembro registrado en el sistema. Se encontraron {len(familias_multiples)} familias de un total de {total_personas} personas analizadas.")
         if familias_multiples:
             for jefe_cedula, data in familias_multiples.items():
-                reporte_familias.pdf.cell(0, 10, "Jefe(a) de Familia:", ln=True, align='C')
+                reporte_familias.pdf.cell(0, 10, "Jefe(a) de Familia:", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
                 jefe_df = pd.DataFrame([{"Documento": data['jefe'][0], "Nombre Completo": data['jefe'][1]}])
                 reporte_familias.create_table_from_dataframe(jefe_df)
-                reporte_familias.pdf.cell(0, 10, "Miembros de la Familia:", ln=True, align='C')
+                reporte_familias.pdf.cell(0, 10, "Miembros de la Familia:", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
                 reporte_familias.create_table_from_dataframe(data['miembros'])
                 reporte_familias.pdf.ln(5)
         else:
-            reporte_familias.pdf.cell(0, 10, "No se encontraron familias con más de un miembro.", ln=True, align='C')
+            reporte_familias.pdf.cell(0, 10, "No se encontraron familias con más de un miembro.", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
         reporte_familias.save_pdf(nombre_archivo_familias_pdf)
+
+        print("Reporte de familias con varios miembros en formato PDF generado exitosamente!")
 
         # Reporte de Jefes de Familia Solos
         reporte_un_miembro = PDFReport(title="REPORTE DE JEFES DE FAMILIA REGISTRADOS SIN OTROS MIEMBROS")
@@ -108,8 +110,10 @@ if __name__ == "__main__":
             jefes_solos_df = pd.DataFrame(jefes_solos_data)
             reporte_un_miembro.create_table_from_dataframe(jefes_solos_df)
         else:
-            reporte_un_miembro.pdf.cell(0, 10, "No se encontraron jefes de familia registrados sin otros miembros.", ln=True, align='C')
+            reporte_un_miembro.pdf.cell(0, 10, "No se encontraron jefes de familia registrados sin otros miembros.", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
         reporte_un_miembro.save_pdf(nombre_archivo_un_miembro_pdf)
+
+        print("Reporte de jefes de familia registrados sin otros miembros en formato PDF generado exitosamente!")
 
         # Reporte de Advertencias
         reporte_advertencias = PDFReport(title="REPORTE DE ADVERTENCIAS EN LOS REGISTROS DE FAMILIA")
@@ -120,10 +124,10 @@ if __name__ == "__main__":
             advertencias_df = pd.DataFrame(lista_advertencias, columns=["Cédula de Jefe de familia", "Nombre Completo (Persona)", "Cédula (Persona)"])
             reporte_advertencias.create_table_from_dataframe(advertencias_df)
         else:
-            reporte_advertencias.pdf.cell(0, 10, "No se encontraron advertencias en los registros de familia.", ln=True, align='C')
+            reporte_advertencias.pdf.cell(0, 10, "No se encontraron advertencias en los registros de familia.", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
         reporte_advertencias.save_pdf(nombre_archivo_advertencias_pdf)
 
-        print("Reportes PDF generados exitosamente en la carpeta 'reportes/reportes_pdf'.")
+        print("Reporte de advertencia en formato PDF generado exitosamente!")
 
         # Reporte de Personas Repetidas
         reporte_repetidos = PDFReport(title="REPORTE DE PERSONAS REPETIDAS")
@@ -132,7 +136,7 @@ if __name__ == "__main__":
         if not personas_repetidas.empty:
             reporte_repetidos.create_table_from_dataframe(personas_repetidas)
         else:
-            reporte_repetidos.pdf.cell(0, 10, "No se encontraron personas repetidas en el registro.", ln=True, align='C')
+            reporte_repetidos.pdf.cell(0, 10, "No se encontraron personas repetidas en el registro.", new_x="LMARGIN", new_y="NEXT", align='C') # Updated ln
         reporte_repetidos.save_pdf(nombre_archivo_repetidos_pdf)
 
-        print("Reportes PDF generados exitosamente en la carpeta 'reportes/reportes_pdf'.")
+        print("Reporte de personas repetidas en formato PDF generado exitosamente!")
