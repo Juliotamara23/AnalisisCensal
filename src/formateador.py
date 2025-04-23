@@ -3,7 +3,7 @@ import pandas as pd
 def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     """
     Lee un archivo XLSX, formatea los datos según los requerimientos
-    y guarda el resultado en un nuevo archivo XLSX con formato de fecha DD/MM/AAAA.
+    y guarda el resultado en un nuevo archivo XLSX.
 
     Args:
         ruta_archivo_entrada (str): Ruta al archivo XLSX de entrada.
@@ -20,9 +20,12 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     # Mantener la 'Cedula de jefe(a) de Familia' como la primera columna temporalmente
     df_formateado = df.copy()
 
-    # Calcular el campo 'INTEGRANTES'
-    conteo_integrantes = df.groupby('Cedula de jefe(a) de Familia').size().to_dict()
-    df_formateado['INTEGRANTES'] = df_formateado['Cedula de jefe(a) de Familia'].map(conteo_integrantes)
+    # Calcular el campo 'INTEGRANTES' (conteo total por familia - método viejo)
+    # conteo_integrantes = df.groupby('Cedula de jefe(a) de Familia').size().to_dict()
+    # df_formateado['INTEGRANTES'] = df_formateado['Cedula de jefe(a) de Familia'].map(conteo_integrantes)
+
+    # Calcular el campo 'INTEGRANTES' (enumeración incremental por familia - nuevo método)
+    df_formateado['INTEGRANTES'] = df_formateado.groupby('Cedula de jefe(a) de Familia').cumcount() + 1
 
     # Calcular el campo 'FAMILIA'
     familias_unicas = df['Cedula de jefe(a) de Familia'].unique()
@@ -91,7 +94,7 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     # Guardar el nuevo archivo XLSX
     try:
         df_formateado.to_excel(ruta_archivo_salida, index=False)
-        return f"Archivo formateado guardado exitosamente en '{ruta_archivo_salida}' con formato de fecha DD/MM/AAAA."
+        return f"Archivo formateado y guardado exitosamente en '{ruta_archivo_salida}'."
     except Exception as e:
         return f"Error al guardar el archivo formateado: {e}"
 
