@@ -132,7 +132,7 @@ if __name__ == "__main__":
         # Reporte de Personas Repetidas
         reporte_repetidos = PDFReport(title="REPORTE DE PERSONAS REPETIDAS")
         reporte_repetidos.add_title()
-        reporte_repetidos.add_description(f"Este reporte muestra las personas que aparecen más de una vez en el registro, identificadas por su número de documento. Se encontraron {len(personas_repetidas)} registros repetidos de un total de {total_personas} personas analizadas.")
+        reporte_repetidos.add_description(f"Este reporte muestra las personas que aparecen más de una vez en el registro, identificadas por su número de documento. Se encontraron {len(personas_repetidas)} personas repetidas de un total de {total_personas} personas analizadas.")
         if not personas_repetidas.empty:
             reporte_repetidos.create_table_from_dataframe(personas_repetidas)
         else:

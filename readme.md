@@ -66,21 +66,27 @@ Para generar los reportes, ejecuta los scripts de Python correspondientes:
 
 * **Generar reportes en PDF:**
     ```bash
-    python reportes_pdf.py
+    python -m src.reportes.reportes_pdf
     ```
     Los archivos PDF se guardarán en la carpeta `reportes/reportes_pdf/`.
 
 * **Generar reportes en TXT:**
     ```bash
-    python reportes_txt.py
+    python -m src.reportes.reportes_txt
     ```
     Los archivos TXT se guardarán en la carpeta `reportes/reportes_txt/`.
 
 * **Generar reportes en JSON:**
     ```bash
-    python reportes_json.py
+    python -m src.reportes.reportes_json
     ```
     Los archivos JSON se guardarán en la carpeta `reportes/reportes_json/`.
+
+* **Generar reporte avanzado:** Este script genera un reporte más detallado y extenso, haciendo comparaciones entre una base de datos anterior y la actual.
+    ```bash
+    python -m src.reportes_advanced
+    ```
+    Los archivos generados se guardarán en la carpeta `reportes/reportes_advanced/`.
 
 Al ejecutar cada script, se procesará el archivo XLSX y se generarán los reportes correspondientes en las carpetas designadas. Se mostrarán mensajes en la consola indicando la finalización y la ubicación de los archivos generados.
 
