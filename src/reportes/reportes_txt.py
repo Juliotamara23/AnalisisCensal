@@ -5,12 +5,14 @@ def generar_reporte_familias_txt(familias, nombre_archivo, total_personas):
     num_familias = len(familias)
     total_miembros = 0
     with open(nombre_archivo, 'w', encoding='utf-8') as archivo:
+        archivo.write("=" * 20 + " FAMILIAS CON MAS DE 1 MIEMBRO REGISTRADO " + "=" * 20 + "\n\n")
+        archivo.write("Esta tabla muestra a las familias por jefe de las mismas\n")
+        archivo.write(f"\nSe encontraron {num_familias} familias con más de 1 miembro registrado de un total de {total_personas} personas.\n")
         for jefe_cedula, data in familias.items():
             archivo.write(f"\n{'=' * 30} Familia con Cédula de Jefe(a) de Familia: {jefe_cedula} {'=' * 30}\n")
             archivo.write("\nMiembros de la Familia:\n")
             archivo.write(tabulate(data['miembros'], headers='keys', tablefmt='grid', showindex=False) + "\n")
             total_miembros += len(data['miembros']) + 1 # +1 para el jefe
-        archivo.write(f"\nSe encontraron {num_familias} familias con más de 1 miembro registrado de un total de {total_personas} personas.\n")
     print(f"El reporte de familias con más de 1 miembro ha sido guardado en '{nombre_archivo}'.")
 
 def generar_reporte_un_miembro_txt(familias, nombre_archivo, total_personas):
