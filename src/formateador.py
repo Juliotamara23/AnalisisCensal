@@ -20,17 +20,100 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     # Mantener la 'Cedula de jefe(a) de Familia' como la primera columna temporalmente
     df_formateado = df.copy()
 
-    # Calcular el campo 'INTEGRANTES' (conteo total por familia - método viejo)
-    # conteo_integrantes = df.groupby('Cedula de jefe(a) de Familia').size().to_dict()
-    # df_formateado['INTEGRANTES'] = df_formateado['Cedula de jefe(a) de Familia'].map(conteo_integrantes)
-
-    # Calcular el campo 'INTEGRANTES' (enumeración incremental por familia - nuevo método)
+    # Calcular el campo 'INTEGRANTES' (enumeración incremental por familia)
     df_formateado['INTEGRANTES'] = df_formateado.groupby('Cedula de jefe(a) de Familia').cumcount() + 1
+
 
     # Calcular el campo 'FAMILIA'
     familias_unicas = df['Cedula de jefe(a) de Familia'].unique()
     mapeo_familias = {cedula: i + 1 for i, cedula in enumerate(familias_unicas)}
     df_formateado['FAMILIA'] = df_formateado['Cedula de jefe(a) de Familia'].map(mapeo_familias)
+
+    def formatear_nombres(nombre):
+        """Formatea un nombre para que la primera letra de cada palabra sea mayúscula."""
+        if isinstance(nombre, str):
+            return ' '.join(palabra.capitalize() for palabra in nombre.lower().split())
+        return nombre
+
+    # Formatear las columnas de nombre
+    columnas_nombre = ['Primer Nombre', 'Segundo Nombre', 'Primer Apellido', 'Segundo Apellido']
+    for columna in columnas_nombre:
+        if columna in df_formateado.columns:
+            df_formateado[columna] = df_formateado[columna].apply(formatear_nombres)
+            
+    # Mapeo para PARENTESCO
+    mapeo_parentesco = {
+        "Padre": "PA",
+        "Madre": "MA",
+        "Cónyuge": "CO",
+        "Hermano(a)": "HE",
+        "Cabeza de Familia": "CF",
+        "Esposa": "ES",
+        "Hijo(a)": "HI",
+        "Yerno": "YR",
+        "Nuera": "NU",
+        "Suegro(a)": "SU",
+        "Sobrino(a)": "SO",
+        "Cuñado(a)": "CU",
+        "Tío(a)": "TI",
+        "Abuelo(a)": "AB",
+        "Otro no Pariente": "NA", # Asumiendo NA para otros no parientes, revisar si hay otro código
+        "Nieto": "NI",
+        "Nieto(a)": "NI",
+        "Nieta": "NI",
+        "PRIMO": "PR",
+        "PRIMA": "PR",
+        "Prima": "PR",
+        "Primo": "PR"
+    }
+    df_formateado['PARENTESCO'] = df_formateado['Parentesco'].map(mapeo_parentesco)
+
+    # Mapeo para TIPO IDENTIFICACION
+    mapeo_tipo_identificacion = {
+        "Cédula de Ciudadanía": "CC",
+        "Tarjeta de Identidad": "TI",
+        "Registro Civil de Nacimiento": "RC",
+        # Asumiendo que NUIP se maneja como RC, verificar si es diferente
+        "Numero Único de Identificación Personal NUIP": "RC",
+        "No tiene documento de identidad": "NI" # Asumiendo NI para "No tiene documento", verificar código correcto
+    }
+    df_formateado['TIPO IDENTIFICACION'] = df_formateado['Tipo de identificación'].map(mapeo_tipo_identificacion)
+
+    # Mapeo para SEXO
+    mapeo_sexo = {
+        "Masculino": "M",
+        "Femenino": "F"
+    }
+    df_formateado['SEXO'] = df_formateado['Sexo'].map(mapeo_sexo)
+
+    # Mapeo para ESCOLARIDAD
+    mapeo_escolaridad = {
+        "Básica primaria (1° - 5°)": "PR",
+        "Básica secundaria (6° - 9°)": "SE",
+        "Media (10° - 13°)": "SE", # Asumiendo Media entra en Secundaria
+        "Técnico": "UN", # Asumiendo Técnico entra en Universitaria, verificar si hay código específico
+        "Tecnológico": "UN", # Asumiendo Tecnológico entra en Universitaria, verificar si hay código específico
+        "Universitario": "UN",
+        "Especialización": "UN", # Asumiendo Especialización entra en Universitaria
+        "Maestría": "UN", # Asumiendo Maestría entra en Universitaria
+        "Doctorado": "UN", # Asumiendo Doctorado entra en Universitaria
+        "Ninguno": "NI",
+        "NA": "NI" # Asumiendo NA como Ninguno
+    }
+    df_formateado['ESCOLARIDAD'] = df_formateado['Escolaridad'].map(mapeo_escolaridad)
+
+    # Mapeo para ESTADO CIVIL
+    mapeo_estado_civil = {
+        "Soltero(a)": "S",
+        "Casado(a)": "C",
+        "Unión libre": "C", # Asumiendo Unión Libre como Casado, verificar si hay otro código
+        "Divorciado(a)": "S", # Asumiendo Divorciado como Soltero, verificar si hay otro código
+        "Viudo(a)": "S", # Asumiendo Viudo como Soltero, verificar si hay otro código
+        "Separado": "S", # Asumiendo Separado como Soltero, verificar si hay otro código
+        "No Informa": "S", # Asumiendo No Informa como Soltero, verificar si hay otro código
+        "No Aplica": "S" # Asumiendo No Aplica como Soltero, verificar si hay otro código
+    }
+    df_formateado['ESTADO CIVIL'] = df_formateado['Estado civil'].map(mapeo_estado_civil)
 
     # Renombrar y seleccionar las columnas necesarias
     df_formateado = df_formateado.rename(columns={
@@ -38,36 +121,30 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
         'Segundo Nombre': 'SEGUNDO NOMBRE',
         'Primer Apellido': 'PRIMER APELLIDO',
         'Segundo Apellido': 'SEGUNDO APELLIDO',
-        'Parentesco': 'PARENTESCO',
-        'Tipo de identificación': 'TIPO IDENTIFICACION',
         'Documento': 'NUMERO DOCUMENTO',
-        'Sexo': 'SEXO',
         'Fecha de nacimiento': 'FECHA NACIMIENTO',
-        'Escolaridad': 'ESCOLARIDAD',
         'Ocupación': 'OCUPACION',
-        'Estado civil': 'ESTADO CIVIL',
         'Dirección': 'DIRECCION',
         'Teléfono': 'TELEFONO',
         'Hijos nacidos vivos': 'CANTIDAD DE HIJOS NACIDOS VIVOS',
         'Hijos sobrevivientes': 'NUMERO DE HIJOS SOBREVIVIENTES',
         'Fecha de nacimiento del último hijo nacido vivo': 'FECHA DE NACIMIENTO DEL ULTIMO HIJO NACIDO VIVO',
-        'Personas fallecidas en el año anterior': 'CUANTAS PERSONAS FALLECIERON EL AÑO ANTERIOR'
+        'Personas fallecidas en el año anterior': 'CUANTAS PERSONAS FALLECIERON EL AÑO ANTERIOR',
+        'Cedula de jefe(a) de Familia': 'CEDULA DE JEFE DE FAMILIA' # Renombrar la columna del jefe
     })
 
     # Formatear las columnas de fecha
     columnas_fecha = ['FECHA NACIMIENTO', 'FECHA DE NACIMIENTO DEL ULTIMO HIJO NACIDO VIVO']
     for columna in columnas_fecha:
         if columna in df_formateado.columns:
-            # Intentar convertir a datetime, manejar posibles errores
             try:
                 df_formateado[columna] = pd.to_datetime(df_formateado[columna], errors='coerce').dt.strftime('%d/%m/%Y')
             except Exception as e:
                 print(f"Error al formatear la columna '{columna}': {e}")
-                # Si hay un error, se mantiene el formato original
 
     # Seleccionar el orden de las columnas
     orden_columnas = [
-        'Cedula de jefe(a) de Familia', # Se mantiene como la primera columna temporalmente
+        'CEDULA DE JEFE DE FAMILIA', # Ahora la columna renombrada del jefe
         'INTEGRANTES',
         'FAMILIA',
         'PRIMER NOMBRE',
