@@ -1,4 +1,4 @@
-# <h1 aling="center">Proyecto de Reportes y Análisis de Datos de Familias</h1>
+# <h1 align="center">Proyecto de Reportes y Análisis de Datos de Familias</h1>
 
 Este proyecto en Python automatiza el procesamiento y la generación de reportes a partir de un archivo de Excel (`.xlsx`) que contiene información sobre el registro de familias. Permite identificar familias con múltiples miembros, jefes de familia registrados solos, advertencias en los registros y personas que se han registrado más de una vez. Los reportes se generan en formatos PDF, TXT y JSON.
 

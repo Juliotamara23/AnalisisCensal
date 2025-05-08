@@ -29,6 +29,11 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     mapeo_familias = {cedula: i + 1 for i, cedula in enumerate(familias_unicas)}
     df_formateado['FAMILIA'] = df_formateado['Cedula de jefe(a) de Familia'].map(mapeo_familias)
 
+    # Calcular el campo 'NUMERO DE VIVIENDA'
+    familias_unicas = df['Cedula de jefe(a) de Familia'].unique()
+    mapeo_viviendas = {cedula: i + 1 for i, cedula in enumerate(familias_unicas)}
+    df_formateado['NUMERO DE VIVIENDA'] = df_formateado['Cedula de jefe(a) de Familia'].map(mapeo_viviendas)
+
     def formatear_nombres(nombre):
         """Formatea un nombre para que la primera letra de cada palabra sea mayúscula."""
         if isinstance(nombre, str):
@@ -40,6 +45,9 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     for columna in columnas_nombre:
         if columna in df_formateado.columns:
             df_formateado[columna] = df_formateado[columna].apply(formatear_nombres)
+
+    # Convertir el campo 'Parentesco' a minúsculas antes del mapeo
+    df_formateado['PARENTESCO'] = df_formateado['Parentesco'].str.lower().str.strip().str.strip()
             
     # Mapeo para PARENTESCO
     mapeo_parentesco = {
@@ -48,8 +56,15 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
         "Cónyuge": "CO",
         "Hermano(a)": "HE",
         "Cabeza de Familia": "CF",
+        "Jefe de familia": "CF",
+        "jefe de hogar": "CF",
+        "Hermanastro(a)": "HE",
+        "Esposo(a)": "ES",
+        "Esposo": "ES",
         "Esposa": "ES",
         "Hijo(a)": "HI",
+        "Hijastro": "HI",
+        "Hijastra": "HI",
         "Yerno": "YR",
         "Nuera": "NU",
         "Suegro(a)": "SU",
@@ -57,14 +72,16 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
         "Cuñado(a)": "CU",
         "Tío(a)": "TI",
         "Abuelo(a)": "AB",
-        "Otro no Pariente": "NA", # Asumiendo NA para otros no parientes, revisar si hay otro código
         "Nieto": "NI",
         "Nieto(a)": "NI",
         "Nieta": "NI",
+        "nietastro": "NI",
         "PRIMO": "PR",
         "PRIMA": "PR",
         "Prima": "PR",
-        "Primo": "PR"
+        "Primo": "PR",
+        "primo": "PR",
+        "prima": "PR"
     }
     df_formateado['PARENTESCO'] = df_formateado['Parentesco'].map(mapeo_parentesco)
 
@@ -145,6 +162,7 @@ def formatear_datos(ruta_archivo_entrada, ruta_archivo_salida):
     # Seleccionar el orden de las columnas
     orden_columnas = [
         'CEDULA DE JEFE DE FAMILIA', # Ahora la columna renombrada del jefe
+        'NUMERO DE VIVIENDA',
         'INTEGRANTES',
         'FAMILIA',
         'PRIMER NOMBRE',
