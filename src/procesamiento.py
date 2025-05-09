@@ -30,11 +30,11 @@ def procesar_datos(ruta_archivo):
     advertencias = []
     total_personas = len(df)
     jefes_de_familia_documentos = set(df[df['Cedula de jefe(a) de Familia'].astype(str) == df['Documento'].astype(str)]['Documento'].astype(str).tolist())
-
     df['Nombre Completo Persona'] = df['Primer Nombre'].astype(str).str.strip() + ' ' + \
                                       df['Segundo Nombre'].fillna('').astype(str).str.strip() + ' ' + \
                                       df['Primer Apellido'].astype(str).str.strip() + ' ' + \
                                       df['Segundo Apellido'].fillna('').astype(str).str.strip()
+    df['Parentesco'].astype(str).str.strip()
 
     for jefe_cedula_num in df['Cedula de jefe(a) de Familia'].unique():
         jefe_cedula = str(jefe_cedula_num)
@@ -53,7 +53,7 @@ def procesar_datos(ruta_archivo):
 
                 if len(jefe_df) == 1:
                     nombre_jefe = jefe_df.iloc[0]['Nombre Completo Jefe']
-                    miembros_tabla = familia[['Documento', 'Nombre Completo Persona']]
+                    miembros_tabla = familia[['Documento', 'Nombre Completo Persona', 'Parentesco']]
                     if len(miembros_tabla) > 1:
                         familias_multiples[jefe_cedula] = {"jefe": [jefe_df.iloc[0]['Documento'], nombre_jefe], "miembros": miembros_tabla}
                     else:
