@@ -2,7 +2,7 @@
 import pandas as pd
 
 ruta_archivo_viejo = 'Archivo/basededatosvieja.xlsx'
-campos_importantes_viejo = ['FAMILIA', 'NUMERO DOCUMENTO', 'NOMBRE', 'APELLIDOS']
+campos_importantes_viejo = ['FAMILIA', 'NUMERO DOCUMENTO', 'NOMBRE', 'APELLIDOS', "PARENTESCO"]
 
 try:
     df_viejo_test = pd.read_excel(ruta_archivo_viejo, header=0)  # Especificamos que la fila 0 es el encabezado

@@ -100,6 +100,9 @@ def procesar_datos(ruta_archivo):
         personas_repetidas_df = pd.merge(personas_repetidas_df, nombre_repetido_counts, on='Nombre Completo Persona', how='left')
         personas_repetidas_df.rename(columns={'Cedula Persona': 'Cedula Persona'}, inplace=True)
         personas_repetidas_df = personas_repetidas_df[['Cedula de jefe(a) de Familia', 'Nombre Completo Persona', 'Cedula Persona', 'Cantidad_Docs_Repetido']].drop_duplicates(subset=['Nombre Completo Persona', 'Cedula Persona'])
-
+        
+        # Formatear las columnas de cédula para evitar notación científica y manejar NaN
+        personas_repetidas_df['Cedula de jefe(a) de Familia'] = personas_repetidas_df['Cedula de jefe(a) de Familia'].fillna('No se encontro').astype(str).str.replace(r'\.0$', '', regex=True)
+        personas_repetidas_df['Cedula Persona'] = personas_repetidas_df['Cedula Persona'].astype(str).str.replace(r'\.0$', '', regex=True)
 
     return familias_multiples, familias_uno, advertencias_unicas, total_personas, personas_repetidas_df
