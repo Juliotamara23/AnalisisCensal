@@ -1,4 +1,3 @@
-# reportes_avanzados.py
 import pandas as pd
 from fpdf import FPDF, XPos, YPos
 import os
@@ -115,20 +114,33 @@ class PDFReportAvanzado(FPDF):
     def print_advertencias_viejas_table(self, advertencias):
         if advertencias and 'error' not in advertencias:
             self.chapter_title(3, "Miembros de la DB Antigua sin Jefe de Familia Correspondiente en la Nueva DB")
-            self.set_font('DejaVu', '', 10)
-            df_advertencias = pd.DataFrame([{'Documento': a['Persona (Antigua)'].split('(')[-1][:-1], 'Nombre Completo': a['Persona (Antigua)'].split('(')[0].strip(), 'Familia Antigua (ID)': a['Familia Antigua (ID)'], 'Parentesco (Nueva DB)': a['Parentesco (Nueva DB)']} for a in advertencias])
-            self.create_table_from_dataframe(df_advertencias, col_widths=[self.epw * 0.2, self.epw * 0.4, self.epw * 0.2, self.epw * 0.2])
-            self.ln(5)
-        elif 'error' in advertencias:
-            self.chapter_body(advertencias['error'])
-
-    def print_advertencias_viejas_table(self, advertencias):
-        if advertencias and 'error' not in advertencias:
-            self.chapter_title(3, "Miembros de la DB Antigua sin Jefe de Familia Correspondiente en la Nueva DB")
-            self.set_font('DejaVu', '', 10)
-            df_advertencias = pd.DataFrame([{'Documento': a['Persona (Antigua)'].split('(')[-1][:-1], 'Nombre Completo': a['Persona (Antigua)'].split('(')[0].strip(), 'Familia Antigua (ID)': a['Familia Antigua (ID)']} for a in advertencias])
-            self.create_table_from_dataframe(df_advertencias, col_widths=[self.epw * 0.2, self.epw * 0.5, self.epw * 0.3])
-            self.ln(5)
+            
+            # Agrupar advertencias por Familia Antigua (ID)
+            familias = {}
+            for adv in advertencias:
+                familia_id = adv['Familia Antigua (ID)']
+                if familia_id not in familias:
+                    familias[familia_id] = []
+                # Extraer documento y nombre completo
+                persona = adv['Persona (Antigua)']
+                doc = persona.split('(')[-1][:-1]  # Obtener documento entre paréntesis
+                nombre = persona.split('(')[0].strip()  # Obtener nombre antes del paréntesis
+                familias[familia_id].append({'Documento': doc, 'Nombre Completo': nombre})
+            
+            # Crear una tabla por cada familia
+            for familia_id, miembros in familias.items():
+                self.set_font('DejaVu', 'B', 10)
+                self.cell(0, 6, f"Familia Antigua (ID): {familia_id}", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+                self.set_font('DejaVu', '', 10)
+                
+                # Crear DataFrame para la tabla
+                df_miembros = pd.DataFrame(miembros)
+                self.create_table_from_dataframe(
+                    df_miembros, 
+                    col_widths=[self.epw * 0.3, self.epw * 0.7]
+                )
+                self.ln(2)  # Espacio entre tablas
+            
         elif 'error' in advertencias:
             self.chapter_body(advertencias['error'])
 
@@ -221,7 +233,7 @@ def comparar_bases_de_datos(ruta_vieja, ruta_nueva):
 
 if __name__ == "__main__":
     ruta_archivo_viejo = 'Archivo/basededatosvieja.xlsx'
-    ruta_archivo_nuevo = 'Archivo/Cuestionario Cabildo TATACHIO MIRABEL (Respuestas).xlsx'
+    ruta_archivo_nuevo = 'Archivo/Cuestionario.xlsx'
     ruta_reporte_pdf = 'reportes/reportes_avanzados'
     nombre_reporte_pdf = os.path.join(ruta_reporte_pdf, 'reporte_avanzado.pdf')
     report_title = "REPORTE AVANZADO DE COMPARACIÓN DE BASES DE DATOS"

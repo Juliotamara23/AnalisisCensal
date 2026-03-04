@@ -86,7 +86,7 @@ Para generar los reportes, ejecuta los scripts de Python correspondientes:
     ```bash
     python -m src.reportes_advanced
     ```
-    Los archivos generados se guardarán en la carpeta `reportes/reportes_advanced/`.
+    Los archivos generados se guardarán en la carpeta `reportes/reporte_avanzado/`.
 
 Al ejecutar cada script, se procesará el archivo XLSX y se generarán los reportes correspondientes en las carpetas designadas. Se mostrarán mensajes en la consola indicando la finalización y la ubicación de los archivos generados.
 
