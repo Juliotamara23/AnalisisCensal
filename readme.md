@@ -47,7 +47,7 @@ Disclaimers:
 * **Cédula de jefe(a) de Familia:** Número de documento del jefe de familia.
 * **Nombre:** Nombre completo de la persona (incluyendo primer y segundo nombre).
 * **Apellido:** Apellido completo de la persona (incluyendo primer y segundo apellido).
-* **DNI:** Número de documento de identidad (corresponde al campo 'Documento').
+* **Documento:** Número de documento de identidad (corresponde al campo 'Documento').
 * **Parentesco:** Relación con el jefe de familia (ej. "Jefe", "Esposa", "Hijo", etc.).
 * **Teléfono:** Número de teléfono de contacto.
 * **Dirección:** Dirección del hogar.
@@ -84,7 +84,7 @@ Para generar los reportes, ejecuta los scripts de Python correspondientes:
 
 * **Generar reporte avanzado:** Este script genera un reporte más detallado y extenso, haciendo comparaciones entre una base de datos anterior y la actual.
     ```bash
-    python -m src.reportes_advanced
+    python -m src.reporte_avanzado
     ```
     Los archivos generados se guardarán en la carpeta `reportes/reporte_avanzado/`.
 
