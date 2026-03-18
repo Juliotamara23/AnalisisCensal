@@ -17,16 +17,21 @@ El proyecto realiza las siguientes tareas:
 
 El proyecto se organiza en los siguientes archivos:
 
-* `Archivo/`: Directorio donde se espera encontrar el archivo de datos en formato XLSX (`Cuestionario Cabildo TATACHIO MIRABEL (Respuestas).xlsx` por defecto).
+* `Archivo/`: Directorio donde se espera encontrar el archivo de datos en formato XLSX (`Cuestionario.xlsx` por defecto).
 * `fonts/`: Directorio que contiene las fuentes necesarias para la generación de los reportes PDF (`DejaVuSans.ttf`, `DejaVuSans-Bold.ttf`).
 * `reportes/`: Directorio raíz para los reportes generados.
     * `reportes/reportes_pdf/`: Contiene los reportes en formato PDF.
     * `reportes/reportes_txt/`: Contiene los reportes en formato TXT.
     * `reportes/reportes_json/`: Contiene los reportes en formato JSON.
-* `procesamiento.py`: Contiene la lógica principal para leer, procesar y analizar los datos del archivo XLSX.
-* `reportes_pdf.py`: Contiene la clase y la lógica para generar los reportes en formato PDF.
-* `reportes_txt.py`: Contiene las funciones para generar los reportes en formato TXT.
-* `reportes_json.py`: Contiene las funciones para generar los reportes en formato JSON.
+    * `reportes/reportes_avanzados/`: Contiene los reportes generados por el script avanzado.
+* `src/`: Directorio que contiene el código fuente del proyecto.
+    * `src/procesamiento.py`: Contiene la lógica principal para leer, procesar y analizar los datos del archivo XLSX.
+    * `src/formateador.py`: Script para pre-procesar o dar formato a los datos si es necesario.
+    * `src/reporte_avanzado.py`: Lógica para generar reportes comparativos detallados.
+    * `src/reportes/`: Subdirectorio con los generadores de reportes por formato.
+        * `src/reportes/reportes_pdf.py`: Lógica para generar los reportes en formato PDF.
+        * `src/reportes/reportes_txt.py`: Lógica para generar los reportes en formato TXT.
+        * `src/reportes/reportes_json.py`: Lógica para generar los reportes en formato JSON.
 
 ## Requisitos
 
@@ -56,8 +61,8 @@ Disclaimers:
 Entre otros campos que varian según los datos pide el ministerio del interior de Colombia.
 
 1.  **Clonar el repositorio.**
-2.  **Crear los directorios necesarios:** Asegúrate de tener las carpetas `Archivo/`, `fonts/` y `reportes/reportes_pdf/`, `reportes/reportes_txt/`, `reportes/reportes_json/` creadas en la misma ubicación que los archivos `.py`.
-3.  **Colocar el archivo de datos:** Coloca tu archivo de datos en formato XLSX dentro del directorio `Archivo/`. Por defecto, el script buscará un archivo llamado `Cuestionario Cabildo TATACHIO MIRABEL (Respuestas).xlsx`. Si tu archivo tiene un nombre diferente, deberás modificar la variable `ruta_archivo_xlsx` en los archivos de reporte (`reportes_pdf.py`, `reportes_txt.py`, `reportes_json.py`) para que coincida.
+2.  **Crear los directorios necesarios:** Asegúrate de tener las carpetas `Archivo/`, `fonts/` y `reportes/reportes_pdf/`, `reportes/reportes_txt/`, `reportes/reportes_json/`, `reportes/reportes_avanzados/` creadas en la misma ubicación que la carpeta `src/`.
+3.  **Colocar el archivo de datos:** Coloca tu archivo de datos en formato XLSX dentro del directorio `Archivo/`. Por defecto, el script buscará un archivo llamado `Cuestionario.xlsx`. Si tu archivo tiene un nombre diferente, deberás modificar la variable `ruta_archivo_xlsx` en los archivos de reporte (`src/reportes/reportes_pdf.py`, `src/reportes/reportes_txt.py`, `src/reportes/reportes_json.py`) para que coincida.
 4.  **Incluir las fuentes:** Asegúrate de tener los archivos de fuente `DejaVuSans.ttf` y `DejaVuSans-Bold.ttf` dentro del directorio `fonts/`. Puedes descargar estas fuentes gratuitamente si no las tienes.
 
 ## Uso
@@ -82,11 +87,11 @@ Para generar los reportes, ejecuta los scripts de Python correspondientes:
     ```
     Los archivos JSON se guardarán en la carpeta `reportes/reportes_json/`.
 
-* **Generar reporte avanzado:** Este script genera un reporte más detallado y extenso, haciendo comparaciones entre una base de datos anterior y la actual.
+* **Generar reporte avanzado:** Este script genera un reporte más detallado y extenso, haciendo comparaciones entre una base de datos anterior (`basededatosvieja.xlsx`) y la actual (`Cuestionario.xlsx`).
     ```bash
     python -m src.reporte_avanzado
     ```
-    Los archivos generados se guardarán en la carpeta `reportes/reporte_avanzado/`.
+    Los archivos generados se guardarán en la carpeta `reportes/reportes_avanzados/`.
 
 Al ejecutar cada script, se procesará el archivo XLSX y se generarán los reportes correspondientes en las carpetas designadas. Se mostrarán mensajes en la consola indicando la finalización y la ubicación de los archivos generados.
 
