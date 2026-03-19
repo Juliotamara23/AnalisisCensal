@@ -56,7 +56,7 @@ Disclaimers:
 * **Parentesco:** Relación con el jefe de familia (ej. "Jefe", "Esposa", "Hijo", etc.).
 * **Teléfono:** Número de teléfono de contacto.
 * **Dirección:** Dirección del hogar.
-* **Email:** Correo electrónico (este campo no estaba en la lista original, se añadió si está disponible en los datos).
+* **Email:** Correo electrónico.
 
 Entre otros campos que varian según los datos pide el ministerio del interior de Colombia.
 
