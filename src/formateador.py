@@ -319,7 +319,13 @@ if __name__ == "__main__":
     ARCHIVO_ORIGEN = r'E:\DEV\Proyects\AnalisisCensal\Archivo\basededatosvieja.xlsx'
     ARCHIVO_REFERENCIA = r'E:\DEV\Proyects\AnalisisCensal\Archivo\Formato Censal.xlsx'
     AÑO_ACTUAL = datetime.now().year
-    ARCHIVO_DESTINO = rf'E:\DEV\Proyects\AnalisisCensal\Archivo\Censo-{AÑO_ACTUAL}.xlsx'
+    
+    # Asegurar que el directorio de salida exista
+    DIR_SALIDA = r'E:\DEV\Proyects\AnalisisCensal\Archivo\Formateado'
+    if not os.path.exists(DIR_SALIDA):
+        os.makedirs(DIR_SALIDA)
+        
+    ARCHIVO_DESTINO = os.path.join(DIR_SALIDA, f'Censo-{AÑO_ACTUAL}.xlsx')
     
     print("=" * 60)
     print(f"   SCRIPT DE FORMATEO DE CENSOS - AÑO {AÑO_ACTUAL}")
